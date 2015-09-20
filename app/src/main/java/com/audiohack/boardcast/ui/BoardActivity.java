@@ -1,4 +1,4 @@
-package com.audiohackathon.boardcast.ui;
+package com.audiohack.boardcast.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,10 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.audiohackathon.boardcast.BoardCastIntents;
-import com.audiohackathon.boardcast.R;
-import com.audiohackathon.boardcast.model.Clip;
-import com.audiohackathon.boardcast.model.Collection;
+import com.audiohack.boardcast.BoardCastIntents;
+import com.audiohack.boardcast.R;
+import com.audiohack.boardcast.model.Clip;
+import com.audiohack.boardcast.model.Collection;
 import com.bumptech.glide.Glide;
 
 import java.util.Collections;
@@ -63,10 +63,24 @@ public class BoardActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        // Grab collection either from Intent or from saved state.
         mCollection = (Collection) (savedInstanceState != null
                 ? savedInstanceState.getParcelable(STATE_COLLECTION)
                 : getIntent().getParcelableExtra(BoardCastIntents.EXTRA_COLLECTION)
         );
+
+        if (mCollection == null) {
+            throw new IllegalStateException("Collection is null.");
+        }
+
+        // Set up app bar.
+        appBar.setTitle(mCollection.title != null && !mCollection.title.isEmpty()
+                ? mCollection.title
+                : getString(R.string.title_activity_board)
+        );
+        setSupportActionBar(appBar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Set up board view.
         boardView.setLayoutManager(new GridLayoutManager(this, COLUMN_COUNT));
@@ -74,7 +88,7 @@ public class BoardActivity extends AppCompatActivity {
         boardView.setAdapter(mAdapter);
 
         // Put clips inside board.
-        if (mCollection != null && mCollection.clips != null) {
+        if (mCollection.clips != null) {
             mAdapter.setClips(mCollection.clips);
         }
     }

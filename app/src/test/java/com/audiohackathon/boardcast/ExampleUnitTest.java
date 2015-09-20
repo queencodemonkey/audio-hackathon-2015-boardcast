@@ -1,4 +1,4 @@
-package com.audiohackathon.boardcast;
+package com.audiohack.boardcast;
 
 import org.junit.Test;
 

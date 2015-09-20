@@ -4,6 +4,9 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <!-- Collection list screen -->
+    <dimen name="collection_list_item_height_min">72dp</dimen>
+
     <!-- Clip screen -->
     <dimen name="clip_poster_size">320dp</dimen>
     <dimen name="clip_poster_margin_vertical">48dp</dimen>

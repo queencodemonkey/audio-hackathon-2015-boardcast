@@ -1,21 +1,23 @@
-package com.audiohackathon.boardcast.ui;
+package com.audiohack.boardcast.ui;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.audiohackathon.boardcast.BoardCastIntents;
-import com.audiohackathon.boardcast.R;
-import com.audiohackathon.boardcast.api.BoardCastAPI;
-import com.audiohackathon.boardcast.model.Clip;
-import com.audiohackathon.boardcast.model.Collection;
-import com.audiohackathon.boardcast.model.Podcast;
+import com.audiohack.boardcast.BoardCastIntents;
+import com.audiohack.boardcast.R;
+import com.audiohack.boardcast.api.BoardCastAPI;
+import com.audiohack.boardcast.model.Clip;
+import com.audiohack.boardcast.model.Collection;
+import com.audiohack.boardcast.model.Podcast;
+import com.audiohack.boardcast.ui.view.SimpleDividerItemDecoration;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,11 +28,23 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CollectionListActivity extends AppCompatActivity {
+    //
+    // Fields
+    //
+
+    @Bind(R.id.app_bar)
+    Toolbar appBar;
+
     @Bind(R.id.collection_list)
     RecyclerView collectionRecycler;
 
     private CollectionListAdapter mAdapter;
+
     private BoardCastAPI mAPI;
+
+    //
+    // Activity callbacks
+    //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +52,9 @@ public class CollectionListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_collection_list);
 
         ButterKnife.bind(this);
+
+        // Set up app bar.
+        setSupportActionBar(appBar);
 
         // TODO Hook this up to API.
 //        Retrofit retrofit = new Retrofit.Builder()
@@ -49,6 +66,7 @@ public class CollectionListActivity extends AppCompatActivity {
         collectionRecycler.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CollectionListAdapter(this);
         collectionRecycler.setAdapter(mAdapter);
+        collectionRecycler.addItemDecoration(new SimpleDividerItemDecoration(this));
 
 
         // TODO Nuke this. Test data only.
@@ -270,7 +288,8 @@ public class CollectionListActivity extends AppCompatActivity {
 
         @Override
         public CollectionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new CollectionViewHolder(mInflater.inflate(android.R.layout.simple_list_item_1, parent, false));
+            return new CollectionViewHolder(
+                    mInflater.inflate(R.layout.recycler_item_collection, parent, false));
         }
 
         @Override
@@ -284,13 +303,14 @@ public class CollectionListActivity extends AppCompatActivity {
         }
     }
 
-    static class CollectionViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class CollectionViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
         //
         // Fields
         //
 
-        @Bind(android.R.id.text1)
-        TextView textView;
+        @Bind(R.id.title)
+        TextView titleView;
 
         private Collection mCollection;
 
@@ -308,7 +328,7 @@ public class CollectionListActivity extends AppCompatActivity {
 
         void setCollection(Collection collection) {
             mCollection = collection;
-            textView.setText(mCollection.title);
+            titleView.setText(mCollection.title);
         }
 
         //

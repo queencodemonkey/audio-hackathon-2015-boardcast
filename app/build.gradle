@@ -23,7 +23,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.audiohackathon.boardcast"
+        applicationId "com.audiohack.boardcast"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild

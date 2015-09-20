@@ -1,13 +1,13 @@
-package com.audiohackathon.boardcast;
+package com.audiohack.boardcast;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.audiohackathon.boardcast.model.Clip;
-import com.audiohackathon.boardcast.model.Collection;
-import com.audiohackathon.boardcast.ui.BoardActivity;
-import com.audiohackathon.boardcast.ui.ClipActivity;
-import com.audiohackathon.boardcast.ui.CollectionListActivity;
+import com.audiohack.boardcast.model.Clip;
+import com.audiohack.boardcast.model.Collection;
+import com.audiohack.boardcast.ui.BoardActivity;
+import com.audiohack.boardcast.ui.ClipActivity;
+import com.audiohack.boardcast.ui.CollectionListActivity;
 
 /**
  * @since 2015.09.19

@@ -1,13 +1,14 @@
-package com.audiohackathon.boardcast.ui;
+package com.audiohack.boardcast.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.audiohackathon.boardcast.BoardCastIntents;
-import com.audiohackathon.boardcast.R;
-import com.audiohackathon.boardcast.model.Clip;
+import com.audiohack.boardcast.BoardCastIntents;
+import com.audiohack.boardcast.R;
+import com.audiohack.boardcast.model.Clip;
 import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
@@ -27,6 +28,9 @@ public class ClipActivity extends AppCompatActivity {
     // Fields
     //
 
+    @Bind(R.id.app_bar)
+    Toolbar appBar;
+
     @Bind(R.id.poster)
     ImageView posterView;
 
@@ -44,13 +48,24 @@ public class ClipActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        // Set up app bar.
+        setSupportActionBar(appBar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // Grab clip to display from Intent or from saved state.
         final Clip clip = (Clip) (savedInstanceState != null
                 ? savedInstanceState.getParcelable(STATE_CLIP)
                 : getIntent().getParcelableExtra(BoardCastIntents.EXTRA_CLIP)
         );
-        if (clip != null) {
-            displayClip(clip);
+
+        // Verify that we have a clip. Not having one is an exceptional situation.
+        if (clip == null) {
+            throw new IllegalStateException("Should not have a null clip inside "
+                    + getClass().getName() );
         }
+
+        displayClip(clip);
     }
 
     //

@@ -1,4 +1,4 @@
-package com.audiohackathon.boardcast.model;
+package com.audiohack.boardcast.model;
 
 import java.util.List;
 

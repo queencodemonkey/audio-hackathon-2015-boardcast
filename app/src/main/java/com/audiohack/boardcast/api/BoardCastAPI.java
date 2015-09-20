@@ -1,6 +1,6 @@
-package com.audiohackathon.boardcast.api;
+package com.audiohack.boardcast.api;
 
-import com.audiohackathon.boardcast.model.Collection;
+import com.audiohack.boardcast.model.Collection;
 
 import java.util.List;
 
