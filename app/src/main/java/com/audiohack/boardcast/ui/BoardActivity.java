@@ -121,7 +121,7 @@ public class BoardActivity extends AppCompatActivity {
 
         @Override
         public ClipViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ClipViewHolder(mInflater.inflate(R.layout.grid_item_clip, parent, false));
+            return new ClipViewHolder(mInflater.inflate(R.layout.recycler_item_clip, parent, false));
         }
 
         @Override

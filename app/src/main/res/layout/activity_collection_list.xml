@@ -8,15 +8,48 @@
     tools:context=".ui.BoardListActivity">
 
     <!-- App bar -->
-    <include layout="@layout/app_bar" />
+    <include layout="@layout/app_bar_default" />
+
+    <LinearLayout
+        android:id="@+id/user_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/user_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/collection_user_image_margin_vertical"
+            android:layout_marginBottom="@dimen/collection_user_image_margin_vertical"
+            android:contentDescription="@null"
+            tools:src="@drawable/ic_account_circle_white_48dp" />
+
+        <TextView
+            android:id="@+id/user_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="@dimen/collection_user_text_margin_bottom"
+            tools:text="Ashley is 21, Junior in College. She is studying Political Science and is interested in Women’s Rights issues and American Pop Culture (contemporary music, celebrities, fashion). She’s a social person from a major urban city. She consumes most of her media on her phone. She was raised in a Christian home but is now spiritually ambiguous." />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:background="@color/white_12p" />
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/collection_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/collection_margin_top"
         android:layout_marginBottom="@dimen/activity_vertical_margin" />
 
 </LinearLayout>

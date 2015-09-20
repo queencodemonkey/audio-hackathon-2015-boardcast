@@ -24,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId "com.audiohack.boardcast"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100 + versionBuild
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
@@ -58,5 +58,8 @@ dependencies {
 
     // Network
     compile "com.squareup.retrofit:retrofit:${versions.retrofit}"
+    compile "com.squareup.retrofit:converter-gson:${versions.retrofit}"
+
+    // JSON
     compile "com.google.code.gson:gson:${versions.gson}"
 }

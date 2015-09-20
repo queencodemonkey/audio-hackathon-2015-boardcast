@@ -8,7 +8,7 @@
     tools:context="com.audiohack.boardcast.ui.ClipActivity">
 
     <!-- App bar -->
-    <include layout="@layout/app_bar" />
+    <include layout="@layout/app_bar_default" />
 
     <!-- Content -->
     <LinearLayout
@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:gravity="center_horizontal"
@@ -28,7 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            tools:text="In the Land of Make Believe" />
+            tools:text="In the Land of Make Believe"
+            style="@style/TextAppearance.AppCompat.Title" />
 
         <ImageView
             android:id="@+id/poster"
@@ -37,6 +38,14 @@
             android:layout_marginTop="@dimen/clip_poster_margin_vertical"
             android:layout_marginBottom="@dimen/clip_poster_margin_vertical"
             android:contentDescription="@null" />
+
+        <TextView
+            android:id="@+id/transcript"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:text="She's got huge tracts of land…"
+            style="@style/TextAppearance.AppCompat.Subhead" />
 
     </LinearLayout>
 

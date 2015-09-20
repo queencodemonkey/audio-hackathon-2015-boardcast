@@ -10,6 +10,12 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="AppBar">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
 
+    <style name="AppBar.Transparent">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 
 </resources>

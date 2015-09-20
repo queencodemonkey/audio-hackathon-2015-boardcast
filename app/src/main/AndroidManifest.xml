@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.audiohack.boardcast">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Application -->
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"

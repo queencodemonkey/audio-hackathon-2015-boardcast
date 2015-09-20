@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           android:id="@+id/title"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:minHeight="@dimen/collection_list_item_height_min" />
+          android:minHeight="@dimen/collection_item_height_min"
+          android:gravity="start|center_vertical"
+          android:background="?android:attr/selectableItemBackground"
+          android:paddingStart="@dimen/collection_item_padding_horizontal"
+          android:paddingEnd="@dimen/collection_item_padding_horizontal"
+          android:paddingTop="@dimen/collection_item_padding_top"
+          android:paddingBottom="@dimen/collection_item_padding_bottom"
+          android:drawableStart="@drawable/ic_dashboard_white_24dp"
+          android:drawablePadding="@dimen/collection_item_drawable_padding"
+          tools:text="My Awesomest Collection"
+          style="@style/TextAppearance.AppCompat.Subhead" />

@@ -8,7 +8,7 @@
     tools:context="ui.BoardActivity">
 
     <!-- App bar -->
-    <include layout="@layout/app_bar" />
+    <include layout="@layout/app_bar_default" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/board_grid"

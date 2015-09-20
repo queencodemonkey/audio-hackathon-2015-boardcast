@@ -3,4 +3,8 @@
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Palette -->
+    <color name="black_12p">#30000000</color>
+    <color name="white_12p">#30FFFFFF</color>
 </resources>

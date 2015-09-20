@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.audiohack.boardcast.BoardCastIntents;
@@ -16,8 +17,6 @@ import com.audiohack.boardcast.R;
 import com.audiohack.boardcast.api.BoardCastAPI;
 import com.audiohack.boardcast.model.Clip;
 import com.audiohack.boardcast.model.Collection;
-import com.audiohack.boardcast.model.Podcast;
-import com.audiohack.boardcast.ui.view.SimpleDividerItemDecoration;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,8 +25,15 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit.Call;
 
 public class CollectionListActivity extends AppCompatActivity {
+    //
+    // Constants
+    //
+
+    private static final String BOARD_CAST_API_BASE_URL = "https://agile-sands-5998.herokuapp.com/api/v1";
+
     //
     // Fields
     //
@@ -35,12 +41,22 @@ public class CollectionListActivity extends AppCompatActivity {
     @Bind(R.id.app_bar)
     Toolbar appBar;
 
+    @Bind(R.id.user_layout)
+    View userLayout;
+
+    @Bind(R.id.user_image)
+    ImageView userImageView;
+
+    @Bind(R.id.user_description)
+    TextView userDescriptionView;
+
     @Bind(R.id.collection_list)
     RecyclerView collectionRecycler;
 
     private CollectionListAdapter mAdapter;
 
     private BoardCastAPI mAPI;
+    private Call<Collection> mCallInProgress;
 
     //
     // Activity callbacks
@@ -56,212 +72,72 @@ public class CollectionListActivity extends AppCompatActivity {
         // Set up app bar.
         setSupportActionBar(appBar);
 
-        // TODO Hook this up to API.
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("")
-//                .build();
-//        mAPI = retrofit.create(BoardCastAPI.class);
+        // Set up user view.
+        userImageView.setImageResource(R.drawable.placeholder_user);
+        userDescriptionView.setText("Ashley is 21, Junior in College. She is studying Political Science and is interested in Women’s Rights issues and American Pop Culture (contemporary music, celebrities, fashion). She’s a social person from a major urban city. She consumes most of her media on her phone. She was raised in a Christian home but is now spiritually ambiguous.");
 
         // Set up board view.
         collectionRecycler.setLayoutManager(new LinearLayoutManager(this));
         mAdapter = new CollectionListAdapter(this);
         collectionRecycler.setAdapter(mAdapter);
-        collectionRecycler.addItemDecoration(new SimpleDividerItemDecoration(this));
+
+        // API setup and initial call.
+//        final Gson gson = new GsonBuilder()
+//                .registerTypeAdapter(Collection.class, new CollectionJsonDeserializer()).create();
+//        final Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(BOARD_CAST_API_BASE_URL)
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .build();
+//        mAPI = retrofit.create(BoardCastAPI.class);
+//        mCallInProgress = mAPI.getCollection(12345, 1);
+//        mCallInProgress.enqueue(new Callback<Collection>() {
+//            @Override
+//            public void onResponse(Response<Collection> response) {
+//                final Collection[] collections = {response.body()};
+//                mAdapter.setCollections(Arrays.asList(collections));
+//            }
+//
+//            @Override
+//            public void onFailure(Throwable t) {
+//                Toast.makeText(CollectionListActivity.this,
+//                        "Error retrieving test collection.", Toast.LENGTH_LONG).show();
+//            }
+//        });
 
 
         // TODO Nuke this. Test data only.
-        LinkedList<Clip> testClips = new LinkedList<>();
+        final LinkedList<Clip> testClips = new LinkedList<>();
         testClips.add(new Clip(
                 565,
-                "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
+                "The Land of Make Believe",
+                Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/565_0.jpg",
                 61.22f, 91.0f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Land of Make Believe",
-                        "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/565_0.jpg"
-                )
+                "He created stuff that never even appeared in the books."
         ));
         testClips.add(new Clip(
                 566,
-                "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
+                "Lower 9 + 10",
+                Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/566-square.jpg",
                 33.44f, 50f,
-                "And they heard an explosion, and then the water start coming up the streets.",
-                new Podcast(
-                        "Lower 9 + 10",
-                        "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/566-small.jpg"
-                )
+                "And they heard an explosion, and then the water start coming up the streets."
         ));
         testClips.add(new Clip(
                 564,
-                "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
+                "Too Soon?",
+                Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/562.jpg",
                 22f, 25.4f,
-                "When Jordan was going into his senior year of high school in small town Utah.",
-                new Podcast(
-                        "Too Soon?",
-                        "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/562.jpg"
-                )
+                "When Jordan was going into his senior year of high school in small town Utah."
         ));
         testClips.add(new Clip(
                 563,
-                "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
+                "The Problem We All Live With - Part Two",
+                Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/563.jpg",
                 41.4f, 52f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Problem We All Live With - Part Two",
-                        "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/563.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                565,
-                "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/565_0.jpg",
-                61.22f, 91.0f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Land of Make Believe",
-                        "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/565_0.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                566,
-                "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/566-square.jpg",
-                33.44f, 50f,
-                "And they heard an explosion, and then the water start coming up the streets.",
-                new Podcast(
-                        "Lower 9 + 10",
-                        "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/566-small.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                564,
-                "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/562.jpg",
-                22f, 25.4f,
-                "When Jordan was going into his senior year of high school in small town Utah.",
-                new Podcast(
-                        "Too Soon?",
-                        "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/562.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                563,
-                "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/563.jpg",
-                41.4f, 52f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Problem We All Live With - Part Two",
-                        "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/563.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                565,
-                "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/565_0.jpg",
-                61.22f, 91.0f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Land of Make Believe",
-                        "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/565_0.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                566,
-                "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/566-square.jpg",
-                33.44f, 50f,
-                "And they heard an explosion, and then the water start coming up the streets.",
-                new Podcast(
-                        "Lower 9 + 10",
-                        "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/566-small.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                564,
-                "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/562.jpg",
-                22f, 25.4f,
-                "When Jordan was going into his senior year of high school in small town Utah.",
-                new Podcast(
-                        "Too Soon?",
-                        "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/562.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                563,
-                "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/563.jpg",
-                41.4f, 52f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Problem We All Live With - Part Two",
-                        "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/563.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                565,
-                "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/565_0.jpg",
-                61.22f, 91.0f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Land of Make Believe",
-                        "http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/565_0.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                566,
-                "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/566-square.jpg",
-                33.44f, 50f,
-                "And they heard an explosion, and then the water start coming up the streets.",
-                new Podcast(
-                        "Lower 9 + 10",
-                        "http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/566-small.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                564,
-                "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/562.jpg",
-                22f, 25.4f,
-                "When Jordan was going into his senior year of high school in small town Utah.",
-                new Podcast(
-                        "Too Soon?",
-                        "http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/562.jpg"
-                )
-        ));
-        testClips.add(new Clip(
-                563,
-                "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                "http://files.thisamericanlife.org/sites/default/files/episodes/563.jpg",
-                41.4f, 52f,
-                "He created stuff that never even appeared in the books.",
-                new Podcast(
-                        "The Problem We All Live With - Part Two",
-                        "http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3",
-                        "http://files.thisamericanlife.org/sites/default/files/episodes/thumbnail/563.jpg"
-                )
+                "He created stuff that never even appeared in the books."
         ));
         final Collection[] collections = {new Collection(1, "My Awesome Clips", testClips)};
         mAdapter.setCollections(Arrays.asList(collections));
