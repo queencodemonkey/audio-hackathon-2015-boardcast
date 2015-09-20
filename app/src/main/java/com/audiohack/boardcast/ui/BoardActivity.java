@@ -165,7 +165,7 @@ public class BoardActivity extends AppCompatActivity {
             if (mClip.transcript != null) {
                 textView.setText(mClip.transcript);
             } else {
-                textView.setText(mClip.podcast.title);
+                textView.setText(mClip.showTitle);
             }
         }
 

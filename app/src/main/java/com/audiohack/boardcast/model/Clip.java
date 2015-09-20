@@ -3,6 +3,11 @@ package com.audiohack.boardcast.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @since 2015.09.19
  */
@@ -32,26 +37,29 @@ public class Clip implements Parcelable {
     //
 
     public int id;
-    public String url;
+    public String title;
+    public String showTitle;
+    @SerializedName("audio_files")
+    public List<String> audioUrls;
     public String posterUrl;
+    @SerializedName("in_point")
     public float timeIn;
     public float timeOut;
     public String transcript;
-    public Podcast podcast;
 
     //
     // Constructors.
     //
 
-    public Clip(int id, String url, String posterUrl, float timeIn, float timeOut, String transcript,
-                Podcast podcast) {
+    public Clip(int id, String showTitle, List<String> audioUrls, String posterUrl, float timeIn, float timeOut,
+                String transcript) {
         this.id = id;
-        this.url = url;
+        this.showTitle = showTitle;
+        this.audioUrls = audioUrls;
         this.posterUrl = posterUrl;
         this.timeIn = timeIn;
         this.timeOut = timeOut;
         this.transcript = transcript;
-        this.podcast = podcast;
     }
 
     /**
@@ -61,12 +69,13 @@ public class Clip implements Parcelable {
      */
     public Clip(Parcel in) {
         id = in.readInt();
-        url = in.readString();
+        showTitle = in.readString();
+        audioUrls = new ArrayList<>();
+        in.readStringList(audioUrls);
         posterUrl = in.readString();
         timeIn = in.readFloat();
         timeOut = in.readFloat();
         transcript = in.readString();
-        podcast = in.readParcelable(Podcast.class.getClassLoader());
     }
 
 
@@ -82,11 +91,11 @@ public class Clip implements Parcelable {
     @Override
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeInt(id);
-        destination.writeString(url);
+        destination.writeString(showTitle);
+        destination.writeStringList(audioUrls);
         destination.writeString(posterUrl);
         destination.writeFloat(timeIn);
         destination.writeFloat(timeOut);
         destination.writeString(transcript);
-        destination.writeParcelable(podcast, 0);
     }
 }
