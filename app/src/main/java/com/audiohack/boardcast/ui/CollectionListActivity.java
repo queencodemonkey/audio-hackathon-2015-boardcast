@@ -41,9 +41,6 @@ public class CollectionListActivity extends AppCompatActivity {
     @Bind(R.id.app_bar)
     Toolbar appBar;
 
-    @Bind(R.id.user_layout)
-    View userLayout;
-
     @Bind(R.id.user_image)
     ImageView userImageView;
 
@@ -108,39 +105,54 @@ public class CollectionListActivity extends AppCompatActivity {
         // TODO Nuke this. Test data only.
         final LinkedList<Clip> testClips = new LinkedList<>();
         testClips.add(new Clip(
-                565,
-                "The Land of Make Believe",
-                Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3"),
-                "http://files.thisamericanlife.org/sites/default/files/episodes/565_0.jpg",
-                61.22f, 91.0f,
-                "He created stuff that never even appeared in the books."
-        ));
-        testClips.add(new Clip(
                 566,
-                "Lower 9 + 10",
+                "The Land of Make Believe",
+                "http://www.thisamericanlife.org/radio-archives/episode/566/the-land-of-make-believe",
                 Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/566/566.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/566-square.jpg",
-                33.44f, 50f,
-                "And they heard an explosion, and then the water start coming up the streets."
+                959f, 967f,
+                "I think that was when I first realized, like, not everyone had ships in their backyards.",
+                "#362021"
+        ));
+        testClips.add(new Clip(
+                565,
+                "Lower 9 + 10",
+                "http://www.thisamericanlife.org/radio-archives/episode/565/lower-9-10",
+                Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/565/565.mp3"),
+                "http://files.thisamericanlife.org/sites/default/files/episodes/565_0.jpg",
+                1001f, 1008f,
+                "OK. I hate daydreaming. Do you have nightmares?",
+                "#5F383A"
         ));
         testClips.add(new Clip(
                 564,
                 "Too Soon?",
+                "http://www.thisamericanlife.org/radio-archives/episode/564/too-soon",
                 Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/564/564.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/562.jpg",
-                22f, 25.4f,
-                "When Jordan was going into his senior year of high school in small town Utah."
+                259f, 269f,
+                "And I looked at that, and I thought, that's funny. I don't remember that glass having blood on it before I punched through it.",
+                "#885053"
         ));
         testClips.add(new Clip(
                 563,
                 "The Problem We All Live With - Part Two",
+                "http://www.thisamericanlife.org/radio-archives/episode/563/the-problem-we-all-live-with-part-two",
                 Collections.singletonList("http://hackathon-audio.thisamericanlife.org/audio/563/563.mp3"),
                 "http://files.thisamericanlife.org/sites/default/files/episodes/563.jpg",
-                41.4f, 52f,
-                "He created stuff that never even appeared in the books."
+                261f, 279f,
+                "So this is a thing that happens with segregation. Once you get around people who you haven't been around before, you become just super aware of their race and your race.",
+                "#AC8487"
         ));
         final Collection[] collections = {new Collection(1, "My Awesome Clips", testClips)};
         mAdapter.setCollections(Arrays.asList(collections));
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+//        mCallInProgress.cancel();
     }
 
     //

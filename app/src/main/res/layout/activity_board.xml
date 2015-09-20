@@ -15,9 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/board_margin_top"
+        android:layout_marginStart="@dimen/board_spacing"
+        android:layout_marginEnd="@dimen/board_spacing"
+        android:layout_marginTop="@dimen/board_spacing"
         android:layout_marginBottom="0dp" />
 
     <LinearLayout

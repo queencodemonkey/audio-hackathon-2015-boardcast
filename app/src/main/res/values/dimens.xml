@@ -16,10 +16,14 @@
     <dimen name="collection_item_drawable_padding">40dp</dimen>
 
     <!-- Board screen -->
-    <dimen name="board_margin_top">8dp</dimen>
+    <dimen name="board_spacing">4dp</dimen>
+    <dimen name="board_item_padding">16dp</dimen>
+    <dimen name="board_item_height_min">160dp</dimen>
 
     <!-- Clip screen -->
     <dimen name="clip_poster_size">240dp</dimen>
-    <dimen name="clip_poster_margin_vertical">16dp</dimen>
+    <dimen name="clip_poster_margin_vertical">32dp</dimen>
+    <dimen name="clip_text_margin_horizontal">32dp</dimen>
+    <dimen name="clip_text_margin_bottom">16dp</dimen>
 
 </resources>

@@ -39,27 +39,31 @@ public class Clip implements Parcelable {
     public int id;
     public String title;
     public String showTitle;
+    public String showURL;
     @SerializedName("audio_files")
-    public List<String> audioUrls;
-    public String posterUrl;
+    public List<String> audioURLs;
+    public String posterURL;
     @SerializedName("in_point")
     public float timeIn;
     public float timeOut;
     public String transcript;
+    public String color;
 
     //
     // Constructors.
     //
 
-    public Clip(int id, String showTitle, List<String> audioUrls, String posterUrl, float timeIn, float timeOut,
-                String transcript) {
+    public Clip(int id, String showTitle, String showURL, List<String> audioURLs, String posterURL, float timeIn, float timeOut,
+                String transcript, String color) {
         this.id = id;
         this.showTitle = showTitle;
-        this.audioUrls = audioUrls;
-        this.posterUrl = posterUrl;
+        this.showURL = showURL;
+        this.audioURLs = audioURLs;
+        this.posterURL = posterURL;
         this.timeIn = timeIn;
         this.timeOut = timeOut;
         this.transcript = transcript;
+        this.color = color;
     }
 
     /**
@@ -70,12 +74,14 @@ public class Clip implements Parcelable {
     public Clip(Parcel in) {
         id = in.readInt();
         showTitle = in.readString();
-        audioUrls = new ArrayList<>();
-        in.readStringList(audioUrls);
-        posterUrl = in.readString();
+        showURL = in.readString();
+        audioURLs = new ArrayList<>();
+        in.readStringList(audioURLs);
+        posterURL = in.readString();
         timeIn = in.readFloat();
         timeOut = in.readFloat();
         transcript = in.readString();
+        color = in.readString();
     }
 
 
@@ -92,10 +98,12 @@ public class Clip implements Parcelable {
     public void writeToParcel(Parcel destination, int flags) {
         destination.writeInt(id);
         destination.writeString(showTitle);
-        destination.writeStringList(audioUrls);
-        destination.writeString(posterUrl);
+        destination.writeString(showURL);
+        destination.writeStringList(audioURLs);
+        destination.writeString(posterURL);
         destination.writeFloat(timeIn);
         destination.writeFloat(timeOut);
         destination.writeString(transcript);
+        destination.writeString(color);
     }
 }

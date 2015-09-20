@@ -1,6 +1,7 @@
 package com.audiohack.boardcast.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.audiohack.boardcast.R;
 import com.audiohack.boardcast.audio.PlayerFragment;
 import com.audiohack.boardcast.model.Clip;
 import com.audiohack.boardcast.model.Collection;
+import com.audiohack.boardcast.ui.view.SpaceItemDirection;
 import com.bumptech.glide.Glide;
 
 import java.util.Collections;
@@ -48,7 +50,7 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
     /**
      * Number of columns in the board.
      */
-    private static final int COLUMN_COUNT = 3;
+    private static final int COLUMN_COUNT = 2;
 
     //
     // Fields
@@ -106,6 +108,8 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
         boardView.setLayoutManager(new GridLayoutManager(this, COLUMN_COUNT));
         mAdapter = new BoardAdapter(this);
         boardView.setAdapter(mAdapter);
+        final int spacing = getResources().getDimensionPixelSize(R.dimen.board_spacing);
+        boardView.addItemDecoration(new SpaceItemDirection(spacing));
 
         // Put clips inside board.
         mAdapter.setClips(mCollection.clips);
@@ -141,7 +145,6 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
             mPlayerFragment.startPlaying();
         }
     }
-
 
     //
     // PlayerFragment.PlayerListener implementation
@@ -219,11 +222,18 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
         void setClip(Clip clip) {
             mClip = clip;
 
+            final Context context = itemView.getContext();
             Glide.with(itemView.getContext())
-                    .load(clip.posterUrl)
+                    .load(clip.posterURL)
                     .crossFade()
                     .centerCrop()
                     .into(posterView);
+            final int clipColor = Color.parseColor(mClip.color);
+            itemView.setBackgroundColor(clipColor);
+            textView.setTextColor(ClipColorUtils.shouldUseDarkText(clipColor)
+                            ? Color.BLACK
+                            : Color.WHITE
+            );
 
             if (mClip.transcript != null) {
                 textView.setText(mClip.transcript);

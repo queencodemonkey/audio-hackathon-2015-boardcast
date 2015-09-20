@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @since 2015.09.19
  */
-public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedListener {
+public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener {
 
     //
     // Constants
@@ -29,6 +29,11 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
      * Clips to play.
      */
     private static final String ARGUMENT_CLIPS = "clips";
+
+    /**
+     * Whether the clip should be played in its entirety. Default is <code>false</code>.
+     */
+    private static final String ARGUMENT_PLAY_COMPLETE = "playAll";
 
     /**
      * Index of currently playing clip.
@@ -56,6 +61,7 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
 
     private List<Clip> mClips;
 
+    private boolean mPlayComplete;
     private Clip mCurrentClip;
     private int mCurrentClipIndex;
     private int mCurrentClipPosition;
@@ -66,7 +72,7 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
     private Runnable mStopRunnable = new Runnable() {
         @Override
         public void run() {
-            stopPlaying();
+            stopClip();
             if (incrementClip()) {
                 prepareClip();
             }
@@ -80,13 +86,29 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
     /**
      * Factory method for creating a new PlayerFragment instance.
      *
+     * @param clips        The clips to play.
+     *
      * @return A new PlayerFragment instance.
      */
     public static PlayerFragment newInstance(List<Clip> clips) {
+        return newInstance(clips, false);
+    }
+
+    /**
+     * Factory method for creating a new PlayerFragment instance.
+     *
+     * @param clips        The clips to play.
+     * @param playComplete Whether clips should be played in their entirety.
+     *
+     * @return A new PlayerFragment instance.
+     */
+    public static PlayerFragment newInstance(List<Clip> clips, boolean playComplete) {
         final Bundle args = new Bundle();
         final Clip[] clipArray = new Clip[clips.size()];
         clips.toArray(clipArray);
         args.putParcelableArray(ARGUMENT_CLIPS, clipArray);
+        args.putBoolean(ARGUMENT_PLAY_COMPLETE, playComplete);
+
         final PlayerFragment fragment = new PlayerFragment();
         fragment.setArguments(args);
         return fragment;
@@ -135,6 +157,7 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
         if (parcelableArray == null || parcelableArray.length == 0) {
             throw new IllegalArgumentException("Cannot start player with null/empty clips.");
         }
+        mPlayComplete = getArguments().getBoolean(ARGUMENT_PLAY_COMPLETE, false);
         final int clipCount = parcelableArray.length;
         final Clip[] clipArray = new Clip[clipCount];
         for (int i = 0; i < clipCount; i++) {
@@ -162,6 +185,7 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
         super.onPause();
 
         stopPlaying();
+        resetPlayback();
         mPlayer.release();
         mHandler.removeCallbacks(mStopRunnable);
     }
@@ -178,6 +202,13 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
     // Playback
     //
 
+    private void resetPlayback() {
+        mPlayer.reset();
+        mReady = false;
+        mCurrentClipIndex = 0;
+        mCurrentClip = mClips.get(mCurrentClipIndex);
+    }
+
     private boolean incrementClip() {
         mCurrentClipIndex++;
         if (mCurrentClipIndex < mClips.size()) {
@@ -185,11 +216,8 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
             return true;
         }
         // If the end of the clip list is reached, return `false` so that we do not start playback
-        // but reset the index.
-        mPlayer.reset();
-        mReady = false;
-        mCurrentClipIndex = 0;
-        mCurrentClip = mClips.get(mCurrentClipIndex);
+        // but reset.
+        resetPlayback();
         return false;
     }
 
@@ -197,10 +225,10 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
         mPlayer.reset();
         mReady = false;
         try {
-            mPlayer.setDataSource(getContext(), Uri.parse(mCurrentClip.audioUrls.get(0)));
+            mPlayer.setDataSource(getContext(), Uri.parse(mCurrentClip.audioURLs.get(0)));
         } catch (IOException e) {
             throw new BoardCastException("Had trouble setting data source for clip \""
-                    + mCurrentClip.id + "\" @ " + mCurrentClip.audioUrls.get(0));
+                    + mCurrentClip.id + "\" @ " + mCurrentClip.audioURLs.get(0));
         }
         mPreparing = true;
         mPlayer.prepareAsync();
@@ -218,13 +246,17 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
         mPlaying = true;
     }
 
-    public void stopPlaying() {
+    private void stopClip() {
         if (!mPlaying) {
             return;
         }
-        mListener.onPlayerStop();
         mPlayer.stop();
         mPlaying = false;
+    }
+
+    public void stopPlaying() {
+        stopClip();
+        mListener.onPlayerStop();
     }
 
     public void pausePlaying() {
@@ -244,16 +276,35 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
     public void onPrepared(MediaPlayer mp) {
         mPreparing = false;
         mReady = true;
-        // Convert clip start time to milliseconds and seek to it.
-        mp.seekTo((int) Math.floor(mCurrentClip.timeIn * 1000));
+
+        if (!mPlayComplete) {
+            // Convert clip start time to milliseconds and seek to it.
+            mp.seekTo((int) Math.floor(mCurrentClip.timeIn * 1000));
+        } else {
+            mp.setOnCompletionListener(this);
+        }
 
         // Start playback.
         startPlaying();
 
-        // Schedule handler to stop clip.
-        final long duration = (long) Math.ceil(mCurrentClip.timeOut - mCurrentClip.timeIn) * 1000;
-        mHandler.postDelayed(mStopRunnable, duration > 0 ? duration : CLIP_PLAY_DURATION_MAX_MS);
+        if (!mPlayComplete) {
+            // Schedule handler to stop clip.
+            final long duration =
+                    (long) Math.ceil(mCurrentClip.timeOut - mCurrentClip.timeIn) * 1000;
+            mHandler.postDelayed(mStopRunnable,
+                    duration > 0? duration : CLIP_PLAY_DURATION_MAX_MS);
+        }
     }
+
+    //
+    // MediaPlayer.OnCompletionListener implementation
+    //
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        incrementClip();
+    }
+
 
     //
     // Interface definitions

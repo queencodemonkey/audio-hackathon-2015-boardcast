@@ -2,6 +2,7 @@ package com.audiohack.boardcast;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.audiohack.boardcast.model.Clip;
 import com.audiohack.boardcast.model.Collection;
@@ -21,7 +22,7 @@ public class BoardCastIntents {
     }
 
     public static Intent newBoardIntent(Context context, Collection collection) {
-        final Intent intent =  new Intent(context, BoardActivity.class);
+        final Intent intent = new Intent(context, BoardActivity.class);
         intent.putExtra(EXTRA_COLLECTION, collection);
         return intent;
     }
@@ -30,5 +31,9 @@ public class BoardCastIntents {
         final Intent intent = new Intent(context, ClipActivity.class);
         intent.putExtra(EXTRA_CLIP, clip);
         return intent;
+    }
+
+    public static Intent newViewURLIntent(Context context, String url) {
+        return new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     }
 }

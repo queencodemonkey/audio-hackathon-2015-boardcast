@@ -4,4 +4,7 @@
     <string name="app_name">BoardCast</string>
     <string name="title_activity_collection_list">Your Collections</string>
     <string name="title_activity_board">My Collection</string>
+
+    <!-- Format -->
+    <string name="clip_transcript_format">\"%s\"</string>
 </resources>
