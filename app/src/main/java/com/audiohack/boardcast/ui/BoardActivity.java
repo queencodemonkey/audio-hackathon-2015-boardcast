@@ -37,6 +37,9 @@ public class BoardActivity extends AppCompatActivity {
      */
     private static final String STATE_COLLECTION = "collection";
 
+    /**
+     * Number of columns in the board.
+     */
     private static final int COLUMN_COUNT = 3;
 
     //
