@@ -1,12 +1,9 @@
 package com.audiohack.boardcast.ui;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,9 +40,6 @@ public class ClipActivity extends AppCompatActivity implements PlayerFragment.Pl
 
     @Bind(R.id.app_bar)
     Toolbar appBar;
-
-    @Bind(R.id.clip_layout)
-    View clipLayout;
 
     @Bind(R.id.poster)
     ImageView posterView;
