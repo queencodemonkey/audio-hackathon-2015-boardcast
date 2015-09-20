@@ -25,5 +25,10 @@
     <dimen name="clip_poster_margin_vertical">32dp</dimen>
     <dimen name="clip_text_margin_horizontal">32dp</dimen>
     <dimen name="clip_text_margin_bottom">16dp</dimen>
+    <dimen name="clip_overlay_height_min">360dp</dimen>
+    <dimen name="clip_overlay_margin_vertical">32dp</dimen>
+    <dimen name="clip_overlay_margin_horizontal">32dp</dimen>
+    <dimen name="clip_overlay_text_margin_horizontal">32dp</dimen>
+    <dimen name="clip_overlay_text_margin_vertical">32dp</dimen>
 
 </resources>

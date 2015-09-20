@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -7,35 +7,59 @@
     android:layout_height="match_parent"
     tools:context="ui.BoardActivity">
 
-    <!-- App bar -->
-    <include layout="@layout/app_bar_default" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/board_grid"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="@dimen/board_spacing"
-        android:layout_marginEnd="@dimen/board_spacing"
-        android:layout_marginTop="@dimen/board_spacing"
-        android:layout_marginBottom="0dp" />
-
     <LinearLayout
-        android:id="@+id/control_layout"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        android:layout_marginEnd="@dimen/activity_horizontal_margin"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="0dp">
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/play_button"
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/board_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/board_spacing"
+                android:layout_marginEnd="@dimen/board_spacing"
+                android:layout_marginTop="@dimen/board_spacing"
+                android:layout_marginBottom="0dp" />
+
+            <View
+                android:id="@+id/mix_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/control_layout"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_media_play" />
+            android:gravity="center">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/play_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fab_margin"
+                android:src="@android:drawable/ic_media_play" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+    <!-- App bar -->
+    <include layout="@layout/app_bar_default" />
+
+</FrameLayout>

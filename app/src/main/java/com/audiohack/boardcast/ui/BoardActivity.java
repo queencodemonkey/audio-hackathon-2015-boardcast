@@ -1,9 +1,11 @@
 package com.audiohack.boardcast.ui;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,6 +45,11 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
     private static final String FRAGMENT_TAG_PLAYER = "player";
 
     /**
+     *
+     */
+    private static final String FRAGMENT_TAG_CLIP_FORMAT = "fragment%d";
+
+    /**
      * Collection displayed on board.
      */
     private static final String STATE_COLLECTION = "collection";
@@ -56,6 +63,12 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
     // Fields
     //
 
+    @Bind(R.id.mix_background)
+    View mixBackground;
+
+    @Bind(R.id.control_layout)
+    View controlLayout;
+
     @Bind(R.id.app_bar)
     Toolbar appBar;
 
@@ -65,10 +78,15 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
     @Bind(R.id.play_button)
     FloatingActionButton playButton;
 
+    @Bind(R.id.fragment_container)
+    ViewGroup fragmentContainer;
+
     private Collection mCollection;
     private BoardAdapter mAdapter;
 
     private PlayerFragment mPlayerFragment;
+
+    private int mColorPrimary;
 
     //
     // Activity callbacks
@@ -80,6 +98,11 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
         setContentView(R.layout.activity_board);
 
         ButterKnife.bind(this);
+
+        final TypedArray typedArray = getTheme().obtainStyledAttributes(
+                new int[]{R.attr.colorPrimary}
+        );
+        mColorPrimary = typedArray.getColor(0, Color.BLACK);
 
         // Grab collection either from Intent or from saved state.
         mCollection = (Collection) (savedInstanceState != null
@@ -100,6 +123,7 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
                 ? mCollection.title
                 : getString(R.string.title_activity_board)
         );
+
         setSupportActionBar(appBar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,10 +151,55 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+        hideClipOverlay();
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putParcelable(STATE_COLLECTION, mCollection);
+    }
+
+    //
+    // Clip overlay
+    //
+
+    private void showClipOverlay(Clip clip) {
+        if (isClipOverlayShowing(clip)) {
+            return;
+        }
+
+        mixBackground.setBackgroundColor(mColorPrimary);
+        controlLayout.setBackgroundColor(mColorPrimary);
+        fragmentContainer.setVisibility(View.VISIBLE);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ClipFragment.newInstance(clip), getFragmentTag(clip))
+                .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
+                .commit();
+    }
+
+    private void hideClipOverlay() {
+        mixBackground.setBackgroundColor(Color.TRANSPARENT);
+        controlLayout.setBackgroundColor(Color.TRANSPARENT);
+        fragmentContainer.setVisibility(View.GONE);
+    }
+
+    private boolean isClipOverlayShowing(Clip clip) {
+        final Fragment fragment = getSupportFragmentManager()
+                .findFragmentByTag(getFragmentTag(clip));
+        return fragment != null;
+    }
+
+    private int getClipIndex(Clip clip) {
+        return mCollection.clips.indexOf(clip);
+    }
+
+    private String getFragmentTag(Clip clip) {
+        return String.format(FRAGMENT_TAG_CLIP_FORMAT, getClipIndex(clip));
     }
 
     //
@@ -139,6 +208,7 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
 
     @OnClick(R.id.play_button)
     void onPlayClick() {
+        playButton.setEnabled(false);
         if (mPlayerFragment.isPlaying()) {
             mPlayerFragment.pausePlaying();
         } else {
@@ -152,6 +222,8 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
 
     @Override
     public void onPlayerStart(Clip clip) {
+        showClipOverlay(clip);
+        playButton.setEnabled(true);
         playButton.setImageResource(android.R.drawable.ic_media_pause);
     }
 
@@ -163,6 +235,7 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
     @Override
     public void onPlayerStop() {
         playButton.setImageResource(android.R.drawable.ic_media_play);
+        hideClipOverlay();
     }
 
 
@@ -222,7 +295,6 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
         void setClip(Clip clip) {
             mClip = clip;
 
-            final Context context = itemView.getContext();
             Glide.with(itemView.getContext())
                     .load(clip.posterURL)
                     .crossFade()
@@ -230,10 +302,7 @@ public class BoardActivity extends AppCompatActivity implements PlayerFragment.P
                     .into(posterView);
             final int clipColor = Color.parseColor(mClip.color);
             itemView.setBackgroundColor(clipColor);
-            textView.setTextColor(ClipColorUtils.shouldUseDarkText(clipColor)
-                            ? Color.BLACK
-                            : Color.WHITE
-            );
+            ClipColorUtils.setTextColorForClip(textView, mClip);
 
             if (mClip.transcript != null) {
                 textView.setText(mClip.transcript);
