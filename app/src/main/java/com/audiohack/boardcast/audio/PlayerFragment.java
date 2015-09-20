@@ -75,6 +75,8 @@ public class PlayerFragment extends Fragment implements MediaPlayer.OnPreparedLi
             stopClip();
             if (incrementClip()) {
                 prepareClip();
+            } else {
+                stopPlaying();
             }
         }
     };
