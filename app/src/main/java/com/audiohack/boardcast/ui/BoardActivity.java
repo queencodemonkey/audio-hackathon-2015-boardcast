@@ -2,6 +2,7 @@ package com.audiohack.boardcast.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.audiohack.boardcast.BoardCastIntents;
 import com.audiohack.boardcast.R;
+import com.audiohack.boardcast.audio.PlayerFragment;
 import com.audiohack.boardcast.model.Clip;
 import com.audiohack.boardcast.model.Collection;
 import com.bumptech.glide.Glide;
@@ -23,14 +25,20 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Activity for displaying a BoardCast collection as a board.
  */
-public class BoardActivity extends AppCompatActivity {
+public class BoardActivity extends AppCompatActivity implements PlayerFragment.PlayerListener {
     //
     // Constants
     //
+
+    /**
+     * Fragment tag for player.
+     */
+    private static final String FRAGMENT_TAG_PLAYER = "player";
 
     /**
      * Collection displayed on board.
@@ -52,8 +60,13 @@ public class BoardActivity extends AppCompatActivity {
     @Bind(R.id.board_grid)
     RecyclerView boardView;
 
+    @Bind(R.id.play_button)
+    FloatingActionButton playButton;
+
     private Collection mCollection;
     private BoardAdapter mAdapter;
+
+    private PlayerFragment mPlayerFragment;
 
     //
     // Activity callbacks
@@ -76,6 +89,10 @@ public class BoardActivity extends AppCompatActivity {
             throw new IllegalStateException("Collection is null.");
         }
 
+        if (mCollection.clips == null || mCollection.clips.isEmpty()) {
+            throw new IllegalArgumentException("Collection has no clips.");
+        }
+
         // Set up app bar.
         appBar.setTitle(mCollection.title != null && !mCollection.title.isEmpty()
                 ? mCollection.title
@@ -91,8 +108,17 @@ public class BoardActivity extends AppCompatActivity {
         boardView.setAdapter(mAdapter);
 
         // Put clips inside board.
-        if (mCollection.clips != null) {
-            mAdapter.setClips(mCollection.clips);
+        mAdapter.setClips(mCollection.clips);
+
+        // Set up player.
+        if (savedInstanceState == null) {
+            mPlayerFragment = PlayerFragment.newInstance(mCollection.clips);
+            getSupportFragmentManager().beginTransaction()
+                    .add(mPlayerFragment, FRAGMENT_TAG_PLAYER)
+                    .commit();
+        } else {
+            mPlayerFragment = (PlayerFragment) getSupportFragmentManager()
+                    .findFragmentByTag(FRAGMENT_TAG_PLAYER);
         }
     }
 
@@ -102,6 +128,40 @@ public class BoardActivity extends AppCompatActivity {
 
         outState.putParcelable(STATE_COLLECTION, mCollection);
     }
+
+    //
+    // Listeners
+    //
+
+    @OnClick(R.id.play_button)
+    void onPlayClick() {
+        if (mPlayerFragment.isPlaying()) {
+            mPlayerFragment.pausePlaying();
+        } else {
+            mPlayerFragment.startPlaying();
+        }
+    }
+
+
+    //
+    // PlayerFragment.PlayerListener implementation
+    //
+
+    @Override
+    public void onPlayerStart(Clip clip) {
+        playButton.setImageResource(android.R.drawable.ic_media_pause);
+    }
+
+    @Override
+    public void onPlayerPause() {
+        playButton.setImageResource(android.R.drawable.ic_media_play);
+    }
+
+    @Override
+    public void onPlayerStop() {
+        playButton.setImageResource(android.R.drawable.ic_media_play);
+    }
+
 
     //
     // Inner classes
