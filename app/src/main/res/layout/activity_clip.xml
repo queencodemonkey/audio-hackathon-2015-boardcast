@@ -31,7 +31,7 @@
             android:layout_width="@dimen/clip_poster_size"
             android:layout_height="@dimen/clip_poster_size"
             android:layout_marginTop="@dimen/clip_poster_margin_vertical"
-            android:layout_marginBottom="@dimen/clip_overlay_margin_vertical"
+            android:layout_marginBottom="@dimen/clip_poster_margin_vertical"
             android:contentDescription="@null"
             android:elevation="8dp" />
 
